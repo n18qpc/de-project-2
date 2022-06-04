@@ -1,8 +1,6 @@
-# РџСЂРѕРµРєС‚ 2
-РћРїРёС€РёС‚Рµ Р·РґРµСЃСЊ РїРѕСЌС‚Р°РїРЅРѕ С…РѕРґ СЂРµС€РµРЅРёСЏ Р·Р°РґР°С‡Рё. Р’С‹ РјРѕР¶РµС‚Рµ РѕСЂРёРµРЅС‚РёСЂРѕРІР°С‚СЊСЃСЏ РЅР° С‚РѕС‚ РїР»Р°РЅ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРµРєС‚Р°, РєРѕС‚РѕСЂС‹Р№ РјС‹ РїСЂРµРґР»Р°РіР°РµРј РІ РёРЅСЃС‚СЂСѓРєС†РёРё РЅР° РїР»Р°С‚С„РѕСЂРјРµ.
---1. РЎРѕР·РґР°С‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє СЃС‚РѕРёРјРѕСЃС‚Рё РґРѕСЃС‚Р°РІРєРё РІ СЃС‚СЂР°РЅС‹ 
--- РРјСЏ С‚Р°Р±Р»РёС†С‹ - shipping_country_rates
--- РґР°РЅРЅС‹Рµ РёР· shipping, РїРѕР»СЏ shipping_country, shipping_country_base_rate
+--1. Создать справочник стоимости доставки в страны 
+-- Имя таблицы - shipping_country_rates
+-- данные из shipping, поля shipping_country, shipping_country_base_rate
 CREATE TABLE public.shipping_country_rates (
 	id 						   SERIAL,
 	shipping_country 		   TEXT,
@@ -10,7 +8,7 @@ CREATE TABLE public.shipping_country_rates (
 	PRIMARY KEY (id)
 );
 
--- Р—Р°РїРѕР»РЅРёРј С‚Р°Р±Р»РёС†Сѓ shipping_country_rates РґР°РЅРЅС‹РјРё РёР· С‚Р°Р±Р»РёС†С‹ shipping
+-- Заполним таблицу shipping_country_rates данными из таблицы shipping
 INSERT INTO public.shipping_country_rates (shipping_country, shipping_country_base_rate) 
 SELECT 
 	s.shipping_country,
@@ -19,13 +17,13 @@ FROM public.shipping s
 GROUP BY s.shipping_country, s.shipping_country_base_rate
 ORDER BY s.shipping_country, s.shipping_country_base_rate;
 
--- РџСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РґР°РЅРЅС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹
+-- Проверим, что данные загружены
 SELECT * FROM public.shipping_country_rates;
 
 
---2. РЎРѕР·РґР°С‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє С‚Р°СЂРёС„РѕРІ РґРѕСЃС‚Р°РІРєРё РІРµРЅРґРѕСЂР° РїРѕ РґРѕРіРѕРІРѕСЂСѓ
--- РРјСЏ С‚Р°Р±Р»РёС†С‹ - shipping_agreement 
--- РґР°РЅРЅС‹Рµ РёР· shipping, РїРѕР»Рµ vendor_agreement_description 
+--2. Создать справочник тарифов доставки вендора по договору
+-- Имя таблицы - shipping_agreement 
+-- данные из shipping, поле vendor_agreement_description 
 CREATE TABLE public.shipping_agreement (
 	agreementid 	     BIGINT,
 	agreement_number 	 TEXT,
@@ -34,7 +32,7 @@ CREATE TABLE public.shipping_agreement (
 	PRIMARY KEY (agreementid)
 );
 
--- Р—Р°РїРѕР»РЅРёРј С‚Р°Р±Р»РёС†Сѓ shipping_agreement РґР°РЅРЅС‹РјРё РёР· С‚Р°Р±Р»РёС†С‹ shipping
+-- Заполним таблицу shipping_agreement данными из таблицы shipping
 INSERT INTO public.shipping_agreement (agreementid, agreement_number, agreement_rate, agreement_commission)
 WITH cte AS (
 SELECT
@@ -50,13 +48,13 @@ SELECT
 FROM cte
 GROUP BY 1,2,3,4;
 
--- РџСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РґР°РЅРЅС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹
+-- Проверим, что данные загружены
 SELECT * FROM public.shipping_agreement ORDER BY agreementid;
 
 
---3. РЎРѕР·РґР°С‚СЊ СЃРїСЂР°РІРѕС‡РЅРёРє Рѕ С‚РёРїР°С… РґРѕСЃС‚Р°РІРєРё
--- РРјСЏ С‚Р°Р±Р»РёС†С‹ - shipping_transfer 
--- РґР°РЅРЅС‹Рµ РёР· shipping, РїРѕР»Рµ shipping_transfer_description, shipping_transfer_rate
+--3. Создать справочник о типах доставки
+-- Имя таблицы - shipping_transfer 
+-- данные из shipping, поле shipping_transfer_description, shipping_transfer_rate
 CREATE TABLE public.shipping_transfer (
 	id 					   SERIAL,
 	transfer_type 		   TEXT,
@@ -65,7 +63,7 @@ CREATE TABLE public.shipping_transfer (
 	PRIMARY KEY (id)
 );
 
--- Р—Р°РїРѕР»РЅРёРј С‚Р°Р±Р»РёС†Сѓ shipping_transfer РґР°РЅРЅС‹РјРё РёР· С‚Р°Р±Р»РёС†С‹ shipping
+-- Заполним таблицу shipping_transfer данными из таблицы shipping
 INSERT INTO public.shipping_transfer (transfer_type, transfer_model, shipping_transfer_rate)
 WITH cte AS (
 SELECT 
@@ -80,12 +78,12 @@ SELECT
 FROM cte
 GROUP BY 1,2,3;
 
--- РџСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РґР°РЅРЅС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹
+-- Проверим, что данные загружены
 SELECT * FROM public.shipping_transfer ORDER BY id;
 
 
---4. РЎРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ СЃ СѓРЅРёРєР°Р»СЊРЅС‹РјРё РґРѕСЃС‚Р°РІРєР°РјРё
--- РРјСЏ С‚Р°Р±Р»РёС†С‹ shipping_info 
+--4. Создать таблицу с уникальными доставками
+-- Имя таблицы shipping_info 
 CREATE TABLE public.shipping_info (
 	shippingid               BIGINT,
 	vendorid                 BIGINT,
@@ -100,7 +98,7 @@ CREATE TABLE public.shipping_info (
 	FOREIGN KEY (shipping_country_rate_id) REFERENCES shipping_country_rates (id) ON UPDATE CASCADE
 );
 
--- Р—Р°РїРѕР»РЅРёРј С‚Р°Р±Р»РёС†Сѓ shipping_info РґР°РЅРЅС‹РјРё РёР· С‚Р°Р±Р»РёС†С‹ shipping Рё СЃРІСЏР·Р°РЅРЅС‹РјРё С‚Р°Р±Р»РёС†Р°РјРё
+-- Заполним таблицу shipping_info данными из таблицы shipping и связанными таблицами
 INSERT INTO public.shipping_info (shippingid, vendorid, payment_amount, shipping_plan_datetime, shipping_transfer_id, shipping_agremeent_id, shipping_country_rate_id)
 SELECT DISTINCT
 	s.shippingid, 
@@ -117,12 +115,12 @@ LEFT JOIN public.shipping_transfer st
 LEFT JOIN public.shipping_country_rates scr 
 	ON s.shipping_country = scr.shipping_country;
 
--- РџСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РґР°РЅРЅС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹
+-- Проверим, что данные загружены
 SELECT * FROM public.shipping_info ORDER BY shippingid;
 
 
---5. РЎРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ СЃС‚Р°С‚СѓСЃРѕРІ Рѕ РґРѕСЃС‚Р°РІРєРµ 
--- РРјСЏ С‚Р°Р±Р»РёС†С‹ - shipping_status
+--5. Создать таблицу статусов о доставке 
+-- Имя таблицы - shipping_status
 CREATE TABLE public.shipping_status (
 	shippingid                   BIGINT,
 	status                       TEXT,
@@ -131,7 +129,7 @@ CREATE TABLE public.shipping_status (
 	shipping_end_fact_datetime   TIMESTAMP
 );
 
--- Р—Р°РїРѕР»РЅРёРј С‚Р°Р±Р»РёС†Сѓ shipping_status РґР°РЅРЅС‹РјРё РёР· С‚Р°Р±Р»РёС†С‹ shipping
+-- Заполним таблицу shipping_status данными из таблицы shipping
 INSERT INTO public.shipping_status (shippingid, status, state, shipping_start_fact_datetime, shipping_end_fact_datetime)
 WITH cte AS (
 	SELECT 
@@ -154,12 +152,12 @@ LEFT JOIN public.shipping s
 	AND cte.max_state_datetime = s.state_datetime 
 ORDER BY shippingid;
 
--- РџСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РґР°РЅРЅС‹Рµ Р·Р°РіСЂСѓР¶РµРЅС‹
+-- Проверим, что данные загружены
 SELECT * FROM public.shipping_status ORDER BY shippingid;
 
 
---6. РЎРѕР·РґР°С‚СЊ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ shipping_datamart 
--- РРјСЏ view - shipping_datamart
+--6. Создать представление shipping_datamart 
+-- Имя view - shipping_datamart
 CREATE OR REPLACE VIEW AS 
 SELECT 
 	si.shippingid,
