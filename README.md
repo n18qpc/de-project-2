@@ -1,5 +1,3 @@
-# Проект 2
-Опишите здесь поэтапно ход решения задачи. Вы можете ориентироваться на тот план выполнения проекта, который мы предлагаем в инструкции на платформе.
 --1. Создать справочник стоимости доставки в страны 
 -- Имя таблицы - shipping_country_rates
 -- данные из shipping, поля shipping_country, shipping_country_base_rate
@@ -160,7 +158,7 @@ SELECT * FROM public.shipping_status ORDER BY shippingid;
 
 --6. Создать представление shipping_datamart 
 -- Имя view - shipping_datamart
-CREATE OR REPLACE VIEW AS 
+CREATE OR REPLACE VIEW shipping_datamartAS 
 SELECT 
 	si.shippingid,
 	si.vendorid,

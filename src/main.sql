@@ -158,7 +158,7 @@ SELECT * FROM public.shipping_status ORDER BY shippingid;
 
 --6. Создать представление shipping_datamart 
 -- Имя view - shipping_datamart
-CREATE OR REPLACE VIEW AS 
+CREATE OR REPLACE VIEW shipping_datamartAS 
 SELECT 
 	si.shippingid,
 	si.vendorid,
